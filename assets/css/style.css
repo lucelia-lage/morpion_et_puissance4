@@ -1,0 +1,79 @@
+
+body {
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #7171cc;
+    color: antiquewhite;
+}
+
+button {
+    padding: 15px;
+    font-size: 1em;
+    background-color: #cd852c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+button:hover {
+    background-color: #c2af34;
+}
+
+#result {
+    font-size: 2em;
+    margin: 20px;
+    font-weight: bold;
+}
+
+#gameContainer {
+    display: grid;
+    gap: 5px;
+    justify-content: center;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.cell {
+    background-color: rgb(150, 172, 146);
+    border: 2px solid rgb(203, 193, 186);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.cell:hover {
+    background-color: rgb(41, 165, 41);
+}
+
+
+.morpion #gameContainer {
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+}
+
+.morpion .cell {
+    width: 100px;
+    height: 100px;
+}
+
+.puissance4 #gameContainer {
+    grid-template-columns: repeat(7, 60px);
+    grid-template-rows: repeat(6, 60px);
+}
+
+.puissance4 .cell {
+    width: 60px;
+    height: 60px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 60px;
+}
