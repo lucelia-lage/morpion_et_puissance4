@@ -1,7 +1,7 @@
 let gameMode = 'morpion';  // jeu initialisé par défaut
 let currentPlayer = "X";  // joueur X commence
 let gameOver = false;
-let gameModeType = 'player';
+let gameType = 'player';
 let gridTic = [["", "", ""], ["", "", ""], ["", "", ""]];
 let gridPfour = [["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""]];
 
@@ -17,12 +17,10 @@ function setGameMode() {
     createMap();
     switchGameModeButton.textContent = gameMode === 'morpion' ? 'Puissance 4' : 'Morpion Simple';
 }
-
 // type de jeu :
 function setGameType() {
-    switchGameTypeButton.textContent = gameModeType === 'player' ? 'Jouer contre l\'ordinateur' : 'Jouer à deux';
+    switchGameTypeButton.textContent = gameType === 'player' ? 'Jouer contre l\'ordinateur' : 'Jouer à deux';
 }
-
 // création grille :
 function createMap() {
     gameContainer.innerHTML = ""; //efface le contenu du conteneur du jeu
@@ -41,7 +39,6 @@ function createMap() {
         });
     });
 }
-
 // clic sur une cellule :
 function handleClick(row, col) {
     if (gameOver) return; // jeu terminé? rien se passe!
@@ -61,21 +58,21 @@ function handleClick(row, col) {
     if ((gameMode === 'morpion' && checkWin()) || (gameMode === 'puissance4' && checkWinPuissance4())) {
         resultDisplay.textContent = `${currentPlayer} a gagné !`;
         gameOver = true;
+        showRestartBtn();
         return;
     }
     if (checkDraw(gameMode)) {
         resultDisplay.textContent = "Oupsss, match nul";
         gameOver = true;
+        showRestartBtn();
         return;
     }
-
     // changement de joueur :
     currentPlayer = currentPlayer === "X" ? "O" : "X";
-
     // ordi joue :
-    if (gameModeType === "computer" && currentPlayer === "O" && !gameOver) {
+    if (gameType === "computer" && currentPlayer === "O" && !gameOver) {
         setTimeout(computerMove, 500); // pour avoir le temps de voir les actions se dérouler => ça évite aussi des bugs ! 
-    }
+    } // sinon, tout simplement : computerMove()
 }
 // mouvement de l'ordinateur : 
 function computerMove() {
@@ -100,11 +97,13 @@ function computerMove() {
         if ((gameMode === 'morpion' && checkWin()) || (gameMode === 'puissance4' && checkWinPuissance4())) {
             resultDisplay.textContent = "L'ordinateur a gagné !";
             gameOver = true;
+            showRestartBtn();
             return;
         }
         if (checkDraw(gameMode)) {
             resultDisplay.textContent = "Match nul !";
             gameOver = true;
+            showRestartBtn();
             return;
         }
         currentPlayer = "X"; //ordi a fini son tour => c'est à X de jouer
@@ -120,7 +119,6 @@ function checkWin() {
     if (gridTic[0][2] && gridTic[0][2] === gridTic[1][1] && gridTic[1][1] === gridTic[2][0]) return true; // // vérifier l'autre diagonale
     return false; // aucune condition de victoire remplie ? retourne false
 }
-
 // victoire pour Puissance 4 :
 function checkWinPuissance4() {
     const directions = [
@@ -158,15 +156,32 @@ function checkDraw(mode) {
     }
     return true; // toutes cellules remplies ? match nul 
 }
+
 // réinitialiser :
-resetButton.addEventListener("click", () => {
+function resetGame() {
     gameOver = false;
     currentPlayer = "X";
     resultDisplay.textContent = "";
     gridTic = [["", "", ""], ["", "", ""], ["", "", ""]];
     gridPfour = [["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""], ["", "", "", "", "", "", ""]];
-    createMap();
-});
+    gameContainer.innerHTML = "";
+    createMap()
+
+    const resetBtn = document.querySelector("#resetButton")
+    resetBtn.style.display = "none"
+}
+
+function showRestartBtn() {
+    const resetBtn = document.querySelector("#resetButton");
+    resetBtn.style.display = "block"
+}
+
+document.querySelector("#resetButton").addEventListener("click", resetGame)
+
+function endGame() {
+    showRestartBtn()
+    gameOver = true
+}
 // changer mode de jeu :
 switchGameModeButton.addEventListener("click", () => {
     gameMode = gameMode === 'morpion' ? 'puissance4' : 'morpion';
@@ -174,7 +189,7 @@ switchGameModeButton.addEventListener("click", () => {
 });
 // changer type de jeu :
 switchGameTypeButton.addEventListener('click', () => {
-    gameModeType = gameModeType === 'player' ? 'computer' : 'player';
+    gameType = gameType === 'player' ? 'computer' : 'player';
     setGameType();
 });
 setGameMode();

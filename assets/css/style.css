@@ -1,6 +1,5 @@
-
 body {
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-align: center;
     margin: 0;
     padding: 20px;
@@ -31,9 +30,11 @@ button:hover {
 #gameContainer {
     display: grid;
     gap: 5px;
+    width: 100%;
+    height: 100%;
     justify-content: center;
     margin: 20px auto;
-    padding: 10px;
+    padding: 10px; 
 }
 
 .cell {
@@ -76,4 +77,18 @@ button:hover {
     justify-content: center;
     gap: 20px;
     margin-top: 60px;
+}
+
+#restartBtn {
+    display: none;
+    font-size: 1em;
+    padding: 15px;
+    background-color: #cd852c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+#restartBtn.show {
+    display: block;
 }
