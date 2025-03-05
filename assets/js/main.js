@@ -55,7 +55,7 @@ function handleClick(row, col) {
     gameContainer.children[row].children[col].textContent = currentPlayer; //affiche le texte sur la case qu'on a cliqué
 
     // victoire ou le match nul ?
-    if ((gameMode === 'morpion' && checkWin()) || (gameMode === 'puissance4' && checkWinPuissance4())) {
+    if ((gameMode === 'morpion' && checkWinMorpion()) || (gameMode === 'puissance4' && checkWinP4())) {
         resultDisplay.textContent = `${currentPlayer} a gagné !`;
         gameOver = true;
         showRestartBtn();
@@ -94,7 +94,7 @@ function computerMove() {
         gameContainer.children[row].children[col].textContent = "O" //maj l'affichage
 
         // victoire ou match nul après mouvement ordinateur :
-        if ((gameMode === 'morpion' && checkWin()) || (gameMode === 'puissance4' && checkWinPuissance4())) {
+        if ((gameMode === 'morpion' && checkWinMorpion()) || (gameMode === 'puissance4' && checkWinP4())) {
             resultDisplay.textContent = "L'ordinateur a gagné !";
             gameOver = true;
             showRestartBtn();
@@ -110,7 +110,7 @@ function computerMove() {
     }
 }
 // victoire pour Morpion :
-function checkWin() {
+function checkWinMorpion() {
     for (let i = 0; i < 3; i++) {
         if (gridTic[i][0] && gridTic[i][0] === gridTic[i][1] && gridTic[i][1] === gridTic[i][2]) return true; // vérifier les lignes
         if (gridTic[0][i] && gridTic[0][i] === gridTic[1][i] && gridTic[1][i] === gridTic[2][i]) return true; // vérifier les colonnes
@@ -120,28 +120,31 @@ function checkWin() {
     return false; // aucune condition de victoire remplie ? retourne false
 }
 // victoire pour Puissance 4 :
-function checkWinPuissance4() {
-    const directions = [
-        { row: 0, col: 1 }, { row: 1, col: 0 }, { row: 1, col: 1 }, { row: 1, col: -1 }
-    ]; // directions possibles pour aligner 4 jetons (horizontale, verticale, diagonales)
-    for (let row = 0; row < 6; row++) { //parcours chaque ligne de la grille
+function checkWinP4() {
+    for (let row = 0; row < 6; row++) {
         for (let col = 0; col < 7; col++) {
-            if (gridPfour[row][col]) {
-                for (const { row: dr, col: dc } of directions) { //parcours les directions pour vérifier si un alignement de 4 jetons est possible
-                    let win = true;
-                    for (let i = 1; i < 4; i++) {
-                        const r = row + dr * i, c = col + dc * i;
-                        if (r < 0 || r >= 6 || c < 0 || c >= 7 || gridPfour[r][c] !== gridPfour[row][col]) {
-                            win = false; // alignement brisé => on arrête de vérifier cette direction
-                            break;
-                        }
-                    }
-                    if (win) return true; // alignement est trouvé ? retourne true
+            if (gridPfour[row][col]) {  // jeton est présent à la position (row, col)?
+                const player = gridPfour[row][col];  // Enregistre le joueur (X ou O)
+                // Vérifie horizontalement
+                if (col + 3 < 7 && gridPfour[row][col] === gridPfour[row][col+1] && gridPfour[row][col+1] === gridPfour[row][col+2] && gridPfour[row][col+2] === gridPfour[row][col+3]) {
+                    return true;
+                }
+                // Vérifie verticalement
+                if (row + 3 < 6 && gridPfour[row][col] === gridPfour[row+1][col] && gridPfour[row+1][col] === gridPfour[row+2][col] && gridPfour[row+2][col] === gridPfour[row+3][col]) {
+                    return true;
+                }
+                // Vérifie diagonalement (haut-gauche à bas-droit)
+                if (row + 3 < 6 && col + 3 < 7 && gridPfour[row][col] === gridPfour[row+1][col+1] && gridPfour[row+1][col+1] === gridPfour[row+2][col+2] && gridPfour[row+2][col+2] === gridPfour[row+3][col+3]) {
+                    return true;
+                }
+                // Vérifie diagonalement (bas-gauche à haut-droit)
+                if (row - 3 >= 0 && col + 3 < 7 && gridPfour[row][col] === gridPfour[row-1][col+1] && gridPfour[row-1][col+1] === gridPfour[row-2][col+2] && gridPfour[row-2][col+2] === gridPfour[row-3][col+3]) {
+                    return true;
                 }
             }
         }
     }
-    return false; // aucune victoire est trouvé ? retourne false
+    return false;
 }
 // match nul ?
 function checkDraw(mode) {
@@ -156,7 +159,6 @@ function checkDraw(mode) {
     }
     return true; // toutes cellules remplies ? match nul 
 }
-
 // réinitialiser :
 function resetGame() {
     gameOver = false;
@@ -170,14 +172,14 @@ function resetGame() {
     const resetBtn = document.querySelector("#resetButton")
     resetBtn.style.display = "none"
 }
-
+// montrer le boutton de redémmarage en fin de jeu : 
 function showRestartBtn() {
     const resetBtn = document.querySelector("#resetButton");
     resetBtn.style.display = "block"
 }
-
+// ajouter un événement au boutton reset : 
 document.querySelector("#resetButton").addEventListener("click", resetGame)
-
+// déclarer fin de jeu : 
 function endGame() {
     showRestartBtn()
     gameOver = true
