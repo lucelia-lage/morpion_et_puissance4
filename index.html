@@ -7,20 +7,32 @@
     <link rel="stylesheet" href="./assets/css/style.css">
     <title>Morpion</title>
 </head>
-<!-- inspecter le site : https://jeu-morpion.fr/ -->
+ <!-- inspecter le site : https://jeu-morpion.fr/ -->
 
 <body>
     <main>
-        <h1>Jeux : Morpion et Puissance 4</h1> 
+        <h1 id="titleMorpion" style="display: none">Morpion</h1>
+        <h1 id="titleP4" style="display: none">Puissance 4</h1>
         <div id="result"></div>
         <div id="gameContainer"></div>
-       <div class="buttons">
-        <button id="switchGameMode">Puissance 4</button>
-        <button id="switchGameType"></button>
-        <button id="resetButton" style="display: none">Redémarrer</button>
-    </div>
+        <div class="buttons">
+            <button id="switchGameMode">Jouer à Puissance 4</button>
+            <button id="switchGameType"></button>
+            <button id="resetButton" style="display: none">Redémarrer</button>
+        </div>
+        <div>
+            <p id="rulesMorpion" style="display: none;">Le but du jeu est d'aligner avant son
+                adversaire 3 symboles identiques
+                horizontalement,
+                verticalement ou en diagonale.</p>
+        </div>
+        <div>
+            <p id="rulesP4" style="display : none">Le but du jeu est d'aligner avant son
+                adversaire 4 symboles identiques
+                horizontalement,
+                verticalement ou en diagonale.</p>
+        </div>
     </main>
     <script src="./assets/js/main.js"></script>
 </body>
-
 </html>

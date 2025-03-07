@@ -1,5 +1,5 @@
-let gameMode = 'morpion';  // jeu initialisé par défaut
-let currentPlayer = "X";  // joueur X commence
+let gameMode = 'morpion';  // jeu initialisé par défaut en mode morpion
+let currentPlayer = "X";  // joueur "X" commence
 let gameOver = false;
 let gameType = 'player';
 let gridTic = [["", "", ""], ["", "", ""], ["", "", ""]];
@@ -10,16 +10,36 @@ const resultDisplay = document.querySelector("#result");
 const resetButton = document.querySelector("#resetButton");
 const switchGameModeButton = document.querySelector("#switchGameMode");
 const switchGameTypeButton = document.querySelector("#switchGameType");
+const rulesMorpion = document.querySelector("#rulesMorpion");
+const rulesP4 = document.querySelector("#rulesP4");
+const titleMorpion = document.querySelector("#titleMorpion");
+const titleP4 = document.querySelector("#titleP4")
 
 // mode de jeu : 
 function setGameMode() {
     document.body.classList.add(gameMode); // ajoute la classe correspondant au mode de jeu 
     createMap();
-    switchGameModeButton.textContent = gameMode === 'morpion' ? 'Puissance 4' : 'Morpion Simple';
+    switchGameModeButton.textContent = gameMode === 'morpion' ? 'Jouer à Puissance 4' : 'Jouer à Morpion Simple';
+    if (gameMode === 'morpion') {
+        rulesMorpion.style.display = "block";
+        rulesP4.style.display = "none";
+        titleMorpion.style.display = "block";
+        titleP4.style.display = "none"
+    } else if (gameMode === 'puissance4') {
+        rulesP4.style.display = "block";
+        rulesMorpion.style.display = "none";
+        titleP4.style.display = "block";
+        titleMorpion.style.display = "none";
+    } else {
+        rulesMorpion.style.display = "none";
+        rulesP4.style.display = "none";
+        titleMorpion.style.display = "none";
+        titleP4.style.display = "none";
+    }
 }
 // type de jeu :
 function setGameType() {
-    switchGameTypeButton.textContent = gameType === 'player' ? 'Jouer contre l\'ordinateur' : 'Jouer à deux';
+    switchGameTypeButton.textContent = gameType === "player" ? "Jouer contre l'ordinateur" : "Jouer à deux";
 }
 // création grille :
 function createMap() {
@@ -35,17 +55,15 @@ function createMap() {
             cellContainer.classList.add("cell");
             rowContainer.appendChild(cellContainer); //ajoute la cellule à la ligne
             cellContainer.textContent = cell;
-            cellContainer.addEventListener("click", () => handleClick(rowIndex, colIndex));
+            cellContainer.addEventListener("click", () => play(rowIndex, colIndex));
         });
     });
 }
 // clic sur une cellule :
-function handleClick(row, col) {
+function play(row, col) {
     if (gameOver) return; // jeu terminé? rien se passe!
-
     // cellule déjà occupée ?
     if (gameMode === 'morpion' && gridTic[row][col] !== "" || gameMode === 'puissance4' && gridPfour[row][col] !== "") return;
-
     // jeton dans la case : 
     if (gameMode === 'morpion') { // en mode ternaire : const grid = gameMode === 'morpion' ? gridTic : gridPFour // après placer le jeton // et mettre à joue l'affichage 
         gridTic[row][col] = currentPlayer; //place le jeton en mode morpion
@@ -71,7 +89,7 @@ function handleClick(row, col) {
     currentPlayer = currentPlayer === "X" ? "O" : "X";
     // ordi joue :
     if (gameType === "computer" && currentPlayer === "O" && !gameOver) {
-        setTimeout(computerMove, 500); // pour avoir le temps de voir les actions se dérouler => ça évite aussi des bugs ! 
+        setTimeout(computerMove, 100); // pour avoir le temps de voir les actions se dérouler => ça évite aussi des bugs ! 
     } // sinon, tout simplement : computerMove()
 }
 // mouvement de l'ordinateur : 
@@ -80,7 +98,6 @@ function computerMove() {
     const grid = gameMode === 'morpion' ? gridTic : gridPfour;
     const rows = gameMode === 'morpion' ? 3 : 6; //ternanire indiquant le nb de lignes de chaque mode de jeu
     const cols = gameMode === 'morpion' ? 3 : 7; //ternaire indiquant le nb de colonnes de chaque mode de jeu
-
     // trouver les cellules vides => il faut parcourir la grille et ajouter les coordonnées des cellules vides à emptyCells
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols; j++) {
@@ -92,7 +109,6 @@ function computerMove() {
         const { row, col } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
         grid[row][col] = "O"; //place jeton O dans cellule vide
         gameContainer.children[row].children[col].textContent = "O" //maj l'affichage
-
         // victoire ou match nul après mouvement ordinateur :
         if ((gameMode === 'morpion' && checkWinMorpion()) || (gameMode === 'puissance4' && checkWinP4())) {
             resultDisplay.textContent = "L'ordinateur a gagné !";
@@ -126,19 +142,19 @@ function checkWinP4() {
             if (gridPfour[row][col]) {  // jeton est présent à la position (row, col)?
                 const player = gridPfour[row][col];  // Enregistre le joueur (X ou O)
                 // Vérifie horizontalement
-                if (col + 3 < 7 && gridPfour[row][col] === gridPfour[row][col+1] && gridPfour[row][col+1] === gridPfour[row][col+2] && gridPfour[row][col+2] === gridPfour[row][col+3]) {
+                if (col + 3 < 7 && gridPfour[row][col] === gridPfour[row][col + 1] && gridPfour[row][col + 1] === gridPfour[row][col + 2] && gridPfour[row][col + 2] === gridPfour[row][col + 3]) {
                     return true;
                 }
                 // Vérifie verticalement
-                if (row + 3 < 6 && gridPfour[row][col] === gridPfour[row+1][col] && gridPfour[row+1][col] === gridPfour[row+2][col] && gridPfour[row+2][col] === gridPfour[row+3][col]) {
+                if (row + 3 < 6 && gridPfour[row][col] === gridPfour[row + 1][col] && gridPfour[row + 1][col] === gridPfour[row + 2][col] && gridPfour[row + 2][col] === gridPfour[row + 3][col]) {
                     return true;
                 }
                 // Vérifie diagonalement (haut-gauche à bas-droit)
-                if (row + 3 < 6 && col + 3 < 7 && gridPfour[row][col] === gridPfour[row+1][col+1] && gridPfour[row+1][col+1] === gridPfour[row+2][col+2] && gridPfour[row+2][col+2] === gridPfour[row+3][col+3]) {
+                if (row + 3 < 6 && col + 3 < 7 && gridPfour[row][col] === gridPfour[row + 1][col + 1] && gridPfour[row + 1][col + 1] === gridPfour[row + 2][col + 2] && gridPfour[row + 2][col + 2] === gridPfour[row + 3][col + 3]) {
                     return true;
                 }
                 // Vérifie diagonalement (bas-gauche à haut-droit)
-                if (row - 3 >= 0 && col + 3 < 7 && gridPfour[row][col] === gridPfour[row-1][col+1] && gridPfour[row-1][col+1] === gridPfour[row-2][col+2] && gridPfour[row-2][col+2] === gridPfour[row-3][col+3]) {
+                if (row - 3 >= 0 && col + 3 < 7 && gridPfour[row][col] === gridPfour[row - 1][col + 1] && gridPfour[row - 1][col + 1] === gridPfour[row - 2][col + 2] && gridPfour[row - 2][col + 2] === gridPfour[row - 3][col + 3]) {
                     return true;
                 }
             }
@@ -149,7 +165,6 @@ function checkWinP4() {
 // match nul ?
 function checkDraw(mode) {
     const grid = mode === 'morpion' ? gridTic : gridPfour; //voir la bonne grille selon le jeu choisi
-
     for (let i = 0; i < grid.length; i++) { // encore des cellules vides ?
         for (let j = 0; j < grid[i].length; j++) {
             if (grid[i][j] === "") {
