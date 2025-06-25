@@ -30,11 +30,11 @@ button:hover {
 #gameContainer {
     display: grid;
     gap: 5px;
-    width: 100%;
-    height: 100%;
     justify-content: center;
+    align-content: center;
     margin: 20px auto;
-    padding: 10px; 
+    padding: 10px;
+    min-height: 300px;
 }
 
 .cell {
@@ -45,16 +45,19 @@ button:hover {
     justify-content: center;
     font-size: 2em;
     font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease-in, opacity 0.2s;
 }
 
 .cell:hover {
     background-color: rgb(41, 165, 41);
 }
 
-
 .morpion #gameContainer {
     grid-template-columns: repeat(3, 100px);
     grid-template-rows: repeat(3, 100px);
+    width: 300px;
+    height: 300px;
 }
 
 .morpion .cell {
@@ -62,9 +65,13 @@ button:hover {
     height: 100px;
 }
 
+/* POUR PUISSANCE 4 : colonnes disposées verticalement */
 .puissance4 #gameContainer {
-    grid-template-columns: repeat(7, 60px);
-    grid-template-rows: repeat(6, 60px);
+    grid-template-columns: repeat(7, 60px);  /* 7 colonnes */
+    grid-template-rows: repeat(6, 60px);     /* 6 lignes */
+    width: 420px;
+    height: 360px;
+    grid-auto-flow: column;  /* Les éléments se placent colonne par colonne */
 }
 
 .puissance4 .cell {
@@ -79,16 +86,28 @@ button:hover {
     margin-top: 60px;
 }
 
-#restartBtn {
-    display: none;
-    font-size: 1em;
-    padding: 15px;
-    background-color: #cd852c;
-    color: white;
-    border: none;
-    border-radius: 10px;
+.cell.fall {
+    animation: fall 0.3s ease-in;
 }
 
-#restartBtn.show {
-    display: block;
-} 
+@keyframes fall {
+    0% {
+        transform: translateY(-200px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#resetButton {
+    background-color: #8a2be2;
+    color: white;
+    border: 2px solid white;
+    box-shadow: 0 0 10px white;
+}
+
+#resetButton:hover {
+    background-color: #5c1cae;
+}
